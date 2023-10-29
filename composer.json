@@ -1,0 +1,15 @@
+{
+    "name": "racing/chat",
+    "description": "simple Chat application",
+    "keywords": ["WebSocket", "Rechet"],
+    "license": "MIT",
+    "type": "lession",
+    "require": {
+        "cboden/ratchet": "^0.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "MyApp\\": "src"
+        }
+    }
+}
