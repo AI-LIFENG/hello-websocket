@@ -29,8 +29,10 @@ class Chat implements MessageComponentInterface {
 
   public function onMessage(ConnectionInterface $from, $msg){
     echo " == Connection#{$from->resourceId}@{$from->remoteAddress} SEND ".$msg."\n";
-
-    $this->db->execute("INSERT INTO \"public\".\"_Hooks\" (\"triggerName\") VALUES ($1)", [$msg]);
     $from->send(date('c')."\n");
+
+    \Amp\Loop::run(function()use($msg){
+      $res = yield $this->db->execute('INSERT INTO "public"."_Hooks" ("triggerName") VALUES ($1)', [$msg]);
+    });
   }
 }
