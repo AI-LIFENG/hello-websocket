@@ -6,8 +6,13 @@ namespace App;
 class Chat implements MessageComponentInterface {
 
   protected $clients;
+  protected $db;
   public function __construct(){
+    date_default_timezone_set('PRC');
     $this->clients = new \SplObjectStorage;
+    $db_cfg = \Amp\Postgres\ConnectionConfig::fromString(
+      "host=172.17.0.1 port=9528 user=root password=Bofang666 dbname=root");
+    $this->db = \Amp\Postgres\pool($db_cfg);
   }
 
   public function onOpen(ConnectionInterface $conn){
@@ -24,6 +29,8 @@ class Chat implements MessageComponentInterface {
 
   public function onMessage(ConnectionInterface $from, $msg){
     echo " == Connection#{$from->resourceId}@{$from->remoteAddress} SEND ".$msg."\n";
+
+    $this->db->execute("INSERT INTO \"public\".\"_Hooks\" (\"triggerName\") VALUES ($1)", [$msg]);
     $from->send(date('c')."\n");
   }
 }
